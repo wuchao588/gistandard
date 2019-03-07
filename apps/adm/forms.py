@@ -3,7 +3,7 @@
 # __data__  : 2017/12/20
 
 from django import forms
-from .models import Supplier, AssetType, Customer, EquipmentType, Equipment, Asset, AssetFile
+from .models import Supplier, AssetType, Customer, EquipmentType, Equipment, Asset, AssetFile,Corp
 
 
 class SupplierCreateForm(forms.ModelForm):
@@ -133,6 +133,7 @@ class AssetCreateForm(forms.ModelForm):
 
             raise forms.ValidationError('资产编号：{}已存在'.format(number))
 
+
 class AssetUpdateForm(forms.ModelForm):
     class Meta:
         model = Asset
@@ -150,3 +151,12 @@ class AssetUploadForm(forms.ModelForm):
     class Meta:
         model = AssetFile
         fields = '__all__'
+
+
+class CorpCreateForm(forms.ModelForm):
+    class Meta:
+        model = Corp
+        fields = '__all__'
+        error_message = {
+            'name': {"required": '平台名不能为空'}
+        }

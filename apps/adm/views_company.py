@@ -13,7 +13,7 @@ from utils.mixin_utils import LoginRequiredMixin
 from rbac.models import Menu
 from system.models import SystemSetup
 from .models import Asset, AssetType, AssetLog, AssetFile,Corp
-from .forms import AssetCreateForm, AssetUpdateForm, AssetUploadForm
+from .forms import AssetCreateForm, AssetUpdateForm, AssetUploadForm, CorpCreateForm
 from rbac.models import Role
 
 
@@ -50,7 +50,41 @@ class CompanyCorpCreateView(LoginRequiredMixin,View):
     """
     def get(self, request):
 
-        render(request, 'adm/company/company_create.html')
+        return render(request, 'adm/company/corp_create.html')
+
+    def post(self, request):
+        res = {'status': 'fail', 'form_errors': ''}
+        corp_create_form = CorpCreateForm(request.POST)
+        id = request.POST.get('id')
+        try:
+            if corp_create_form.is_valid():
+                fields = dict()
+                if request.POST.get('name'):
+                    fields['name'] = request.POST.get('name')
+                if request.POST.get('source'):
+                    fields['source'] = request.POST.get('source')
+                if request.POST.get('domain'):
+                    fields['domain'] = request.POST.get('domain')
+                if request.POST.get('ip_list'):
+                    ip_list = request.POST.get('ip_list')
+                    fields['ip_list'] = json.dumps([i.strip() for i in ip_list.strip('\r\n').split('\r\n')])
+                if id:
+                    Corp.objects.filter(id=id).update(**fields)
+                    res['status'] = 'success'
+                else:
+                    Corp.objects.create(**fields)
+                    res['status'] = 'success'
+            else:
+                pattern = '<li>.*?<ul class=.*?><li>(.*?)</li>'
+                errors = str(corp_create_form.errors)
+                form_errors = re.findall(pattern, errors)
+                res = {
+                    'status': 'fail',
+                    'form_errors': form_errors[0]
+                }
+        except Exception as e:
+            res['form_errors'] = e
+        return HttpResponse(json.dumps(res), content_type='application/json')
 
 
 class AssetView(LoginRequiredMixin, View):

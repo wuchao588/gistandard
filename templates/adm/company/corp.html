@@ -28,7 +28,7 @@
             <div class="box-header">
                 <div class="btn-group pull-left">
                     <button type="button" id="btnCreate" class="btn btn-primary">
-                        <i class="glyphicon glyphicon-plus"></i>入库
+                        <i class="glyphicon glyphicon-plus"></i>添加
                     </button>
 
                 </div>
@@ -198,7 +198,7 @@ $(function() {
 			shadeClose : false,
 			maxmin : true,
 			area : [ '800px', '580px' ],
-			content : "{% url 'adm-company:create' %}",
+			content : "{% url 'adm-company:corp-create' %}",
 			end : function() {
 				//关闭时做的事情
 				window.location.reload();

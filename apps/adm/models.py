@@ -170,15 +170,11 @@ class Equipment(models.Model):
 
 class Corp(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField( max_length=32, verbose_name='名称')
+    name = models.CharField(max_length=32, verbose_name='名称')
     source = models.CharField('公司标识', max_length=32, default='')
-    password = models.CharField('登录密码', max_length=128)
-    corp_id = models.CharField('第三方公司ID', max_length=32, unique=True)
-    corp_secret = models.CharField('管理组的凭证密钥', max_length=32)
     ip_list = models.CharField('服务器ip百名单', max_length=256)
     domain = models.CharField('服务器域名', max_length=32, default='')
-    token = models.CharField('令牌', max_length=32)
-    status = models.SmallIntegerField('状态：-1, 不可用, 0 待审核，1可用', default=1)
+    status = models.SmallIntegerField('状态：-1, 不可用, 0 待审核，1可用', default=1, blank=True, null=True)
 
     class Meta:
         verbose_name = "入驻公司"
